@@ -3,6 +3,7 @@ import config from "./config/config.js";
 import db from "./config/db.js";
 import userRouter from "./router/user.router.js";
 import eventRouter from "./router/event.router.js";
+import photoRouter from "./router/photo.router.js";
 import morgan from "morgan";
 import { Server } from "socket.io";
 import http from "http";
@@ -33,6 +34,8 @@ app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use("/api/v1/user/", userRouter);
 app.use("/api/v1/event/", eventRouter);
+app.use("/api/v1/photo/", photoRouter);
+app.use("/uploads", express.static("uploads"));
 
 // Socket.io
 io.on("connection", (socket) => {

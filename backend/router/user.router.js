@@ -4,6 +4,8 @@ import {
   registerUser,
   allUser,
   addFamily,
+  familyMembers,
+  individualUser,
 } from "../controller/auth.controller.js";
 import {
   loginMiddleware,
@@ -33,7 +35,9 @@ route.post(
 );
 
 route.post("/login", loginMiddleware, loginUser);
-route.get("/allUser", allUser);
-route.post("/add/family", checkToken, addFamily);
+route.get("/all-user", allUser);
+route.post("/add/family/:familyId", checkToken, addFamily);
+route.get("/get/family", checkToken, familyMembers);
+route.get("/get-user", checkToken, individualUser);
 
 export default route;

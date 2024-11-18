@@ -10,6 +10,9 @@ const eventSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
+    created_by: {
+      type: String,
+    },
     description: {
       type: String,
       required: true,
@@ -17,8 +20,13 @@ const eventSchema = mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
-      required: true,
     },
+    participants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
   },
   { timestamps: true }
 );
