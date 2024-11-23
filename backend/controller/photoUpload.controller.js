@@ -3,7 +3,7 @@ import photoModel from "../model/photo.model.js";
 export const uploadPhoto = async (req, res) => {
   try {
     const user = req.user;
-
+    console.log(req.file);
     const uploadPhoto = await photoModel.create({
       ...req.body,
       userId: user._id,

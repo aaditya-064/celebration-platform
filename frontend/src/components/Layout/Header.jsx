@@ -50,22 +50,21 @@ const Header = () => {
         </Link>
       </div>
       <div className="flex items-center gap-2">
-        {/* <img
+        <img
           src={
-            user.profilePicture
+            user?.profilePicture
               ? `http://localhost:8080${user.profilePicture}`
               : "https://imgs.search.brave.com/MfCMRjbwpgFuoONjuznH5NyMPYgEXwI4nagKtkUzPOA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc3RpY2twbmcu/Y29tL2ltYWdlcy81/ODVlNGJmM2NiMTFi/MjI3NDkxYzMzOWEu/cG5n"
           }
           className="h-9 w-9 object-cover rounded-[50%]"
-        /> */}
+        />
         <button
           onClick={() => {
             setIsOpen(!isOpen);
           }}
           className="font-medium hover:text-blue-400"
         >
-          {/* {user.name} */}
-          John Doe
+          {user?.name}
         </button>
         {isOpen ? (
           <div className="flex flex-col absolute bg-white mt-[120px] z-10 w-56 right-3 shadow-md px-5 py-2">

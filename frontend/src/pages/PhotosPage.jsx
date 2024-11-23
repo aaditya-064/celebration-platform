@@ -11,22 +11,34 @@ const PhotosPage = () => {
   const handleUpload = async (e) => {
     e.preventDefault();
     try {
+      const formData = new FormData();
+      formData.append("image", info.image);
+      formData.append("description", info.description);
+      console.log(info);
+
       const uploadPhoto = await axios({
         url: "http://localhost:8080/api/v1/photo/upload/photo",
         method: "post",
-        headers: { Authorization: `Bearer ${token}` },
-        data: info,
+        data: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
       console.log(uploadPhoto);
     } catch (err) {
-      console.log(err);
       toast.error(err?.response?.data?.msg);
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+    setInfo({ ...info, [name]: value });
+  };
+
+  const handleFile = (e) => {
+    const { name, files } = e.target;
+    setInfo({ ...info, [name]: files[0] });
   };
   return (
     <Layout>
@@ -74,9 +86,8 @@ const PhotosPage = () => {
             <input
               type="file"
               accept="image/*"
-              name="imageUrl"
-              value={info.imageUrl}
-              onChange={(e) => handleChange(e)}
+              name="image"
+              onChange={(e) => handleFile(e)}
               className="w-full text-sm text-gray-500
             file:mr-4 file:py-2 file:px-4
             file:rounded-full file:border-0
