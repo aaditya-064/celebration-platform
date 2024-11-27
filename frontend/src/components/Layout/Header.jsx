@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Header = () => {
   const [user, setUser] = useState();
@@ -21,12 +22,16 @@ const Header = () => {
   };
 
   const func = async () => {
-    const data = await axios({
-      url: "http://localhost:8080/api/v1/user/get-user",
-      method: "get",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setUser(data.data);
+    try {
+      const data = await axios({
+        url: "http://localhost:8080/api/v1/user/get-user",
+        method: "get",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(data.data);
+    } catch (err) {
+      toast.error(err?.response?.data?.msg);
+    }
   };
 
   useEffect(() => {

@@ -1,62 +1,55 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
-import axios from "axios";
-import toast from "react-hot-toast";
+import { StateParam } from "../../context/context";
 import AddFamily from "../components/AddFamily";
 import { CircleUser, UserMinus, UserPlus, Users } from "lucide-react";
 
 const FamilyPage = () => {
-  const [open, setOpen] = useState(true);
-  const [info, setInfo] = useState([]);
-  const token = localStorage.getItem("token");
+  const {
+    info,
+    info2,
+    users,
+    filteredData,
+    getFamilyCon,
+    handleChangeCon,
+    allUserCon,
+    handleAddCon,
+    handleFilteredData,
+  } = useContext(StateParam);
   const getFamilyMembers = async () => {
-    const data = await axios({
-      url: "http://localhost:8080/api/v1/user/get/family",
-      method: "get",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setInfo(data.data);
-    try {
-    } catch (err) {
-      toast.error(err?.response?.data?.msg);
-    }
+    getFamilyCon();
   };
-  const [info2, setInfo2] = useState({
-    text: "",
-  });
-  const [users, setUsers] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
+
+  // console.log(
+  //   "This is info",
+  //   info,
+  //   "This is info2",
+  //   info2,
+  //   "This is users",
+  //   users,
+  //   "This is filtered Data",
+  //   filteredData
+  // );
+
+  console.log(info2);
 
   const handleChange = (e) => {
-    const { value } = e.target;
-    setInfo2({ text: value });
-    const filteredData = users.filter((item) => item.email == value);
-    setFilteredData(filteredData);
+    handleChangeCon(e);
+    handleFilteredData(e.target.value);
   };
 
   const allUser = async () => {
-    const data = await axios({
-      url: "http://localhost:8080/api/v1/user/all-user",
-      method: "get",
-    });
-    setUsers(data.data);
-    try {
-    } catch (err) {
-      toast.error(err?.response?.data?.msg);
-    }
+    allUserCon();
   };
 
   const handleAdd = async (id) => {
-    await axios({
-      url: `http://localhost:8080/api/v1/user/add/family/${id}`,
-      method: "post",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    handleAddCon(id);
   };
 
   useEffect(() => {
     allUser();
   }, []);
+
   useEffect(() => {
     getFamilyMembers();
   }, []);
@@ -78,11 +71,12 @@ const FamilyPage = () => {
             onChange={(e) => {
               handleChange(e);
             }}
+            value={info.text}
             placeholder="Search family member by email"
             className="border w-full p-2 rounded"
           />
           <div className="flex flex-col">
-            {info2.text.length >= 1 ? (
+            {/* {info2.text.length >= 1 ? (
               <div className="mt-5 shadow-md">
                 {filteredData.map((item) => (
                   <div
@@ -118,7 +112,7 @@ const FamilyPage = () => {
               </div>
             ) : (
               ""
-            )}
+            )} */}
           </div>
         </div>
         {/* <button
@@ -159,7 +153,6 @@ const FamilyPage = () => {
           ))}
         </div>
       </div>
-      {/* {!open ? <AddFamily onToggle={handleClick} /> : null} */}
     </Layout>
   );
 };

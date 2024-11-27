@@ -1,36 +1,15 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import { parse } from "postcss";
+import React, { useContext } from "react";
+import { StateParam } from "../../../context/context";
 
 const Login = () => {
-  const [info, setInfo] = useState({
-    email: "",
-    password: "",
-  });
-  const navigate = useNavigate();
+  const { info, handleChangeCon, handleLogin } = useContext(StateParam);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const data = await axios({
-        url: "http://localhost:8080/api/v1/user/login",
-        method: "post",
-        data: info,
-      });
-      const payload = JSON.parse(data.request.response);
-      const token = payload.token;
-      localStorage.setItem("token", token);
-      toast.success(data.data.msg);
-      navigate("/");
-    } catch (err) {
-      toast.error(err?.response?.data?.msg);
-    }
+    handleLogin();
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInfo({ ...info, [name]: value });
+    handleChangeCon(e);
   };
   return (
     <div className="flex flex-col justify-center gap-10 items-center h-screen">

@@ -1,34 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import toast from "react-hot-toast";
+import React, { useContext, useState } from "react";
+import { StateParam } from "../../context/context";
+import { useParams } from "react-router-dom";
 
 const CreateEvent = ({ onToggle }) => {
-  const [info, setInfo] = useState({
-    title: "",
-    date: "",
-    description: "",
-  });
-  const token = localStorage.getItem("token");
+  const { info, handleSubmitCon, handleChangeCon } = useContext(StateParam);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios({
-        url: "http://localhost:8080/api/v1/event/upload",
-        method: "post",
-        data: info,
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setInfo({ ...info, title: "", date: "", description: "" });
-    } catch (err) {
-      toast.error(err.response.data.msg);
-    }
+    handleSubmitCon();
   };
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInfo({ ...info, [name]: value });
-    console.log(info);
+    handleChangeCon(e);
   };
   return (
     <div className="relative">
@@ -42,7 +24,7 @@ const CreateEvent = ({ onToggle }) => {
                 handleSubmit(e);
               }}
             >
-              <label for="title" className="ml-1 font-medium">
+              <label htmlFor="title" className="ml-1 font-medium">
                 Title
               </label>
               <input
@@ -55,7 +37,7 @@ const CreateEvent = ({ onToggle }) => {
                 type="text"
                 className="border mt-[-9px] p-2 px-3 rounded placeholder:text-gray-600 outline-none"
               />
-              <label for="date" className="ml-1 font-medium">
+              <label htmlFor="date" className="ml-1 font-medium">
                 Date
               </label>
               <input
@@ -69,7 +51,7 @@ const CreateEvent = ({ onToggle }) => {
                 className="block mt-[-9px] w-full border p-2 px-3 rounded placeholder:text-gray-600 outline-none"
               />
 
-              <label for="description" className="ml-1 font-medium">
+              <label htmlFor="description" className="ml-1 font-medium">
                 Description
               </label>
               <textarea

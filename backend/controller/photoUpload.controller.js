@@ -7,6 +7,8 @@ export const uploadPhoto = async (req, res) => {
     const uploadPhoto = await photoModel.create({
       ...req.body,
       userId: user._id,
+      name: user.name,
+      profilePicture: user.profilePicture,
       imageUrl: `/uploads/pictures/${req.file.filename}`,
     });
     console.log(
@@ -23,6 +25,15 @@ export const allPhotos = async (req, res) => {
     const user = req.user;
     const photos = await photoModel.find({ userId: user._id });
     res.json(photos);
+  } catch (err) {
+    res.status(err?.statusCode || 500).json({ msg: err?.message });
+  }
+};
+
+export const familyMembersPhotos = async (req, res) => {
+  try {
+    const user = req.user;
+    const photos = photoModel.find({});
   } catch (err) {
     res.status(err?.statusCode || 500).json({ msg: err?.message });
   }

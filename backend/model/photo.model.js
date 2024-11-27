@@ -9,6 +9,12 @@ const photoSchema = mongoose.Schema(
     imageUrl: {
       type: String,
     },
+    name: {
+      type: String,
+    },
+    profilePicture: {
+      type: String,
+    },
     description: {
       type: String,
     },

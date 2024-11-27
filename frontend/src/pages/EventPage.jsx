@@ -1,62 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import { StateParam } from "../../context/context";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
-import axios from "axios";
-import toast from "react-hot-toast";
 import CreateEvent from "../components/CreateEvent";
 import { Calendar, MessageCircle, Plus } from "lucide-react";
 
 const EventPage = () => {
-  const [info, setInfo] = useState([]);
-  const [info2, setInfo2] = useState([]);
-  const [open, setOpen] = useState(false);
-  const token = localStorage.getItem("token");
+  const {
+    info,
+    info2,
+    open,
+    handleGetEvents,
+    handleUnjoinedEvents,
+    handleJoinEvent,
+    handleModelCon,
+  } = useContext(StateParam);
   useEffect(() => {
     const getEvents = async () => {
-      try {
-        const data = await axios({
-          url: "http://localhost:8080/api/v1/event/get",
-          method: "get",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setInfo(data.data);
-      } catch (err) {
-        console.log(err);
-        toast.error(err.response.data.msg);
-      }
+      handleGetEvents();
     };
+
     const unjoinedEvents = async () => {
-      try {
-        const data = await axios({
-          url: "http://localhost:8080/api/v1/event/unjoined-events",
-          method: "get",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setInfo2(data.data);
-      } catch (err) {
-        toast.error(err.response.data.msg);
-      }
+      handleUnjoinedEvents();
     };
     getEvents();
     unjoinedEvents();
   }, []);
 
   const handleJoin = async (id) => {
-    try {
-      const data = await axios({
-        url: `http://localhost:8080/api/v1/event/${id}/join`,
-        method: "post",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setInfo2(data.data);
-      console.log(info2);
-    } catch (err) {
-      toast.error(err.response.data.msg);
-    }
+    handleJoinEvent(id);
   };
 
   const handleModel = () => {
-    setOpen(!open);
+    handleModelCon();
   };
 
   return (

@@ -1,27 +1,17 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { StateParam } from "../../../context/context";
 
 const SignUp = () => {
-  const [info, setInfo] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-  const navigate = useNavigate();
+  const { info, handleRegister, handleChangeCon } = useContext(StateParam);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios({
-      url: "http://localhost:8080/api/v1/user/register",
-      method: "post",
-      data: info,
-    });
-    navigate("/login");
+    handleRegister();
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInfo({ ...info, [name]: value });
+    handleChangeCon(e);
   };
   return (
     <div className="flex flex-col justify-center gap-10 items-center h-screen">
