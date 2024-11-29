@@ -1,35 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import { Image, Plus, User, Users } from "lucide-react";
 import UploadPhoto from "../components/UploadPhoto";
-import toast from "react-hot-toast";
-import axios from "axios";
+import { StateParam } from "../../context/context";
 
 const PhotosPage = () => {
+  const { open, info, handleGetPhotos, handleModelCon } =
+    useContext(StateParam);
   const [active, setActive] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [info, setInfo] = useState([]);
 
   const getPhotos = async () => {
-    try {
-      const photos = await axios({
-        url: "http://localhost:8080/api/v1/photo/get/photos",
-        method: "get",
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      setInfo(photos.data);
-    } catch (err) {
-      toast.error(err?.response?.data?.msg);
-    }
+    handleGetPhotos();
   };
   useEffect(() => {
     getPhotos();
+    console.log(info);
   }, []);
 
   const handleToggle = () => {
-    setOpen(!open);
-    console.log(open);
+    handleModelCon();
   };
+
   return (
     <Layout>
       <div className="p-4 mt-8">
@@ -74,20 +65,14 @@ const PhotosPage = () => {
             My Photos
           </button>
         </div>
-        <div className="mt-10 grid grid-cols-2">
+        <div className="mt-10 grid grid-cols-3 gap-10">
           {info.map((item) => (
-            <div key={item._id}>
-              <div className="flex items-center">
-                {/* <img
-                  src={`http://localhost:8080${item.profilePicture}`}
-                  alt=""
-                /> */}
-                <p className="text-lg font-bold ml-2">{item.name}</p>
-              </div>
-              <p className="text-md ml-2">{item.description}</p>
+            <div key={item._id} className="shadow-xl p-4">
+              <p className="text-lg font-bold ml-2">{item.name}</p>
+              <p className="text-md ml-2 mt-2">{item.description}</p>
               <img
                 src={`http://localhost:8080${item.imageUrl}`}
-                className="h-96 rounded-lg mt-3"
+                className="h-96 object-contain rounded-lg mt-3"
               />
             </div>
           ))}

@@ -12,10 +12,13 @@ const FamilyPage = () => {
     filteredData,
     getFamilyCon,
     handleChangeCon,
+    getUserCon,
     allUserCon,
     handleAddCon,
     handleFilteredData,
+    searchUser,
   } = useContext(StateParam);
+
   const getFamilyMembers = async () => {
     getFamilyCon();
   };
@@ -30,8 +33,6 @@ const FamilyPage = () => {
   //   "This is filtered Data",
   //   filteredData
   // );
-
-  console.log(info2);
 
   const handleChange = (e) => {
     handleChangeCon(e);
@@ -71,12 +72,12 @@ const FamilyPage = () => {
             onChange={(e) => {
               handleChange(e);
             }}
-            value={info.text}
+            value={info2.text}
             placeholder="Search family member by email"
             className="border w-full p-2 rounded"
           />
           <div className="flex flex-col">
-            {/* {info2.text.length >= 1 ? (
+            {info2?.text?.length >= 1 ? (
               <div className="mt-5 shadow-md">
                 {filteredData.map((item) => (
                   <div
@@ -112,7 +113,7 @@ const FamilyPage = () => {
               </div>
             ) : (
               ""
-            )} */}
+            )}
           </div>
         </div>
         {/* <button

@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { searchUser } from "../../backend/controller/auth.controller";
 
 export const StateParam = createContext({
   info: [],
@@ -23,11 +24,15 @@ export const StateParam = createContext({
   allUserCon: () => {},
   handleAddCon: () => {},
   handleFilteredData: () => {},
+  handleGetPhotos: () => {},
+  searchUser: () => {},
+  getUserCon: () => {},
 });
 
 export const StateProvider = ({ children }) => {
   const [info, setInfo] = useState([]);
   const [info2, setInfo2] = useState([]);
+  const [loggedUser, setLoggedUser] = useState([]);
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -52,9 +57,8 @@ export const StateProvider = ({ children }) => {
     try {
       const formData = new FormData();
       formData.append("image", info.image);
-      formData.append("description", info.description);
-      console.log(info);
-
+      formData.append("description", info2.description);
+      console.log(formData);
       const uploadPhoto = await axios({
         url: "http://localhost:8080/api/v1/photo/upload/photo",
         method: "post",
@@ -65,6 +69,7 @@ export const StateProvider = ({ children }) => {
         },
       });
       setInfo({ ...info, image: "", description: "" });
+      setInfo2({ ...info2, description: "" });
       console.log(uploadPhoto);
     } catch (err) {
       toast.error(err?.response?.data?.msg);
@@ -76,9 +81,22 @@ export const StateProvider = ({ children }) => {
     setInfo({ ...info, [name]: files[0] });
   };
 
+  const getUserCon = async () => {
+    try {
+      const data = await axios({
+        url: "http://localhost:8080/api/v1/user/get-user",
+        method: "get",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setLoggedUser(data.data);
+    } catch (err) {
+      toast.error(err?.response?.data?.msg);
+    }
+  };
+
   const handleChangeCon = (e) => {
     const { name, value } = e.target;
-    setInfo2({ ...info, [name]: value });
+    setInfo2({ ...info2, [name]: value });
   };
 
   const handleLogin = async () => {
@@ -86,7 +104,7 @@ export const StateProvider = ({ children }) => {
       const data = await axios({
         url: "http://localhost:8080/api/v1/user/login",
         method: "post",
-        data: info,
+        data: info2,
       });
       const payload = JSON.parse(data.request.response);
       const token = payload.token;
@@ -100,11 +118,13 @@ export const StateProvider = ({ children }) => {
 
   const handleRegister = async () => {
     try {
+      console.log(info2);
       await axios({
         url: "http://localhost:8080/api/v1/user/register",
         method: "post",
-        data: info,
+        data: info2,
       });
+      window.location.href = "/login";
     } catch (err) {
       toast.error(err?.response?.data?.msg);
     }
@@ -179,6 +199,21 @@ export const StateProvider = ({ children }) => {
     }
   };
 
+  const searchUser = async () => {
+    try {
+      const data = await axios({
+        url: `http://localhost:8080/api/v1/user/search-user/${info2.email}`,
+        method: "get",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setFilteredData(data.data);
+      console.log(data.data);
+      // console.log(data);
+    } catch (err) {
+      toast.error(err?.response?.data?.msg);
+    }
+  };
+
   const handleAddCon = async (id) => {
     await axios({
       url: `http://localhost:8080/api/v1/user/add/family/${id}`,
@@ -187,9 +222,23 @@ export const StateProvider = ({ children }) => {
     });
   };
 
-  const handleFilteredData = (value) => {
-    const filteredData = users.filter((item) => item.email == value);
-    setFilteredData(filteredData);
+  // const handleFilteredData = (value) => {
+  //   // const all_user = users.filter((item) => item.email != loggedUser.email);
+  //   const filteredData = users.filter((item) => item.email == value);
+  //   setFilteredData(filteredData);
+  // };
+
+  const handleGetPhotos = async () => {
+    try {
+      const photos = await axios({
+        url: "http://localhost:8080/api/v1/photo/get/photos",
+        method: "get",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setInfo(photos.data);
+    } catch (err) {
+      toast.error(err?.response?.data?.msg);
+    }
   };
 
   return (
@@ -214,6 +263,9 @@ export const StateProvider = ({ children }) => {
         allUserCon,
         handleAddCon,
         handleFilteredData,
+        handleGetPhotos,
+        getUserCon,
+        searchUser,
       }}
     >
       {children}

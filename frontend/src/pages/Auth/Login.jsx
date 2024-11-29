@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { StateParam } from "../../../context/context";
 
 const Login = () => {
-  const { info, handleChangeCon, handleLogin } = useContext(StateParam);
+  const { info2, handleChangeCon, handleLogin } = useContext(StateParam);
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleLogin();
@@ -26,7 +26,7 @@ const Login = () => {
             onChange={(e) => {
               handleChange(e);
             }}
-            value={info.email}
+            value={info2.email}
             name="email"
             type="email"
             className="block w-full border p-1 px-3 rounded placeholder:text-gray-600 outline-none"
@@ -37,7 +37,7 @@ const Login = () => {
               handleChange(e);
             }}
             name="password"
-            value={info.password}
+            value={info2.password}
             type="password"
             className="block w-full border p-1 px-3 rounded placeholder:text-gray-600 outline-none"
           />

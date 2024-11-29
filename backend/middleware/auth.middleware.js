@@ -39,6 +39,11 @@ export const checkToken = async (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const verifyToken = jwt.verify(token, config.JWT_SECRET);
+    if (!verifyToken) {
+      const err = new Error("INVALID TOKEN");
+      err.statusCode = 400;
+      throw err;
+    }
     const user = await userModel.findById(verifyToken.userId);
     req.user = user;
     next();

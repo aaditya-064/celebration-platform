@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
   try {
-    const password = req.body.password;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const password_body = req.body.password;
+    const hashedPassword = await bcrypt.hash(password_body, 10);
     // console.log(hashedPassword);
     const user = await userModel.create({
       ...req.body,
@@ -17,6 +17,7 @@ export const registerUser = async (req, res) => {
       .status(201)
       .json({ success: true, message: "REGISTERD SUCCESSFULLY", user });
   } catch (err) {
+    console.log(req.body);
     res
       .status(err?.statusCode || 500)
       .json({ success: false, msg: err?.message });
@@ -57,6 +58,20 @@ export const allUser = async (_, res) => {
   }
 };
 
+export const searchUser = async (req, res) => {
+  try {
+    const user = await userModel.find({
+      email: { $regex: req.params.email, $options: "i" },
+    });
+    res.json(user);
+    console.log(user);
+  } catch (err) {
+    res
+      .status(err?.statusCode || 500)
+      .json({ success: false, msg: err?.message });
+  }
+};
+
 export const individualUser = async (req, res) => {
   try {
     const user = req.user;
@@ -71,11 +86,15 @@ export const individualUser = async (req, res) => {
 
 export const addFamily = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = String(req.user._id);
     const memberId = req.params.familyId;
-    // const user = await userModel.find({ _id: userId });
     if (req.user.familyMembers.includes(memberId)) {
       const err = new Error("FAMILY MEMBER ALREADY EXISTS");
+      err.statusCode = 400;
+      throw err;
+    }
+    if (userId == memberId) {
+      const err = new Error("You can't add yourself");
       err.statusCode = 400;
       throw err;
     }

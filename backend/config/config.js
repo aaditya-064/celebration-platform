@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config(".env");
 
 const data = {
   PORT: process.env.PORT,

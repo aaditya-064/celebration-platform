@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { StateParam } from "../../../context/context";
 
 const SignUp = () => {
-  const { info, handleRegister, handleChangeCon } = useContext(StateParam);
+  const { info2, handleRegister, handleChangeCon } = useContext(StateParam);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +28,7 @@ const SignUp = () => {
             onChange={(e) => {
               handleChange(e);
             }}
-            value={info.name}
+            value={info2.name}
             name="name"
             type="text"
             className="border p-1 px-3 rounded placeholder:text-gray-600 outline-none"
@@ -38,7 +38,7 @@ const SignUp = () => {
             onChange={(e) => {
               handleChange(e);
             }}
-            value={info.email}
+            value={info2.email}
             name="email"
             type="email"
             className="block w-full border p-1 px-3 rounded placeholder:text-gray-600 outline-none"
@@ -49,7 +49,7 @@ const SignUp = () => {
               handleChange(e);
             }}
             name="password"
-            value={info.password}
+            value={info2.password}
             type="password"
             className="block w-full border p-1 px-3 rounded placeholder:text-gray-600 outline-none"
           />
