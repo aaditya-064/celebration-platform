@@ -2,7 +2,6 @@ import { createContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { searchUser } from "../../backend/controller/auth.controller";
 
 export const StateParam = createContext({
   info: [],
