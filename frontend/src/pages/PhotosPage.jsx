@@ -14,7 +14,7 @@ const PhotosPage = () => {
   };
   useEffect(() => {
     getPhotos();
-    console.log(info);
+    // console.log(info);
   }, []);
 
   const handleToggle = () => {

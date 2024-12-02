@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { StateParam } from "../../context/context";
 
 const UploadPhoto = ({ onToggle }) => {
-  const { info, handleFormUpload, handleChangeCon, handleFileCon } =
+  const { info2, handleFormUpload, handleChangeCon, handleFileCon } =
     useContext(StateParam);
 
   const handleUpload = async (e) => {
@@ -47,7 +47,7 @@ const UploadPhoto = ({ onToggle }) => {
                   placeholder="Write a description..."
                   name="description"
                   onChange={(e) => handleChange(e)}
-                  value={info.description}
+                  value={info2.description}
                   className="w-full p-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                   rows="3"
                 ></textarea>

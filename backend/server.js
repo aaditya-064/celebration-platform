@@ -38,16 +38,26 @@ app.use("/api/v1/photo/", photoRouter);
 app.use("/uploads", express.static("uploads"));
 
 // Socket.io
+// io.on("connection", (socket) => {
+//   console.log(`User Connected: ${socket.id}`);
+
+//   socket.on("join_room", (data) => {
+//     socket.join(data.room);
+//   });
+
+//   socket.on("send_message", (data) => {
+//     io.to(data.room).except(socket.id).emit("receive_message", data);
+//     console.log(data);
+//   });
+// });
+
 io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
+  console.log("What is socket: ", socket);
+  console.log("Socket is active");
 
-  socket.on("join_room", (data) => {
-    socket.join(data.room);
-  });
-
-  socket.on("send_message", (data) => {
-    io.to(data.room).except(socket.id).emit("receive_message", data);
-    console.log(data);
+  socket.on("chat", (payload) => {
+    console.log("what is payload: ", payload);
+    io.emit("chat", payload);
   });
 });
 

@@ -8,20 +8,15 @@ const FamilyPage = () => {
   const {
     info,
     info2,
-    users,
     filteredData,
     getFamilyCon,
     handleChangeCon,
-    getUserCon,
     allUserCon,
     handleAddCon,
     handleFilteredData,
     searchUser,
+    handleRemoveCon,
   } = useContext(StateParam);
-
-  const getFamilyMembers = async () => {
-    getFamilyCon();
-  };
 
   // console.log(
   //   "This is info",
@@ -39,6 +34,10 @@ const FamilyPage = () => {
     handleFilteredData(e.target.value);
   };
 
+  const handleRemove = (id) => {
+    handleRemoveCon(id);
+  };
+
   const allUser = async () => {
     allUserCon();
   };
@@ -49,15 +48,12 @@ const FamilyPage = () => {
 
   useEffect(() => {
     allUser();
+    getFamilyCon();
   }, []);
 
   useEffect(() => {
-    getFamilyMembers();
-  }, []);
-
-  // const handleClick = () => {
-  //   setOpen(!open);
-  // };
+    searchUser(info2.text);
+  }, [info2.text]);
 
   return (
     <Layout>
@@ -143,10 +139,10 @@ const FamilyPage = () => {
                 </div>
               </div>
               <button
-                className="text-red-600 hover:opacity-40 transition-all disabled"
-                // onClick={alert(
-                //   "You cannot do that. I'm bored to insert that functionality."
-                // )}
+                className="text-red-600 hover:opacity-40 transition-all"
+                onClick={() => {
+                  handleRemove(item._id);
+                }}
               >
                 <UserMinus />
               </button>

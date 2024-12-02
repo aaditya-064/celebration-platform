@@ -7,6 +7,7 @@ import {
   familyMembers,
   individualUser,
   searchUser,
+  removeFamily,
 } from "../controller/auth.controller.js";
 import {
   loginMiddleware,
@@ -41,5 +42,6 @@ route.post("/add/family/:familyId", checkToken, addFamily);
 route.get("/get/family", checkToken, familyMembers);
 route.get("/get-user", checkToken, individualUser);
 route.get("/search-user/:email", checkToken, searchUser);
+route.delete("/remove-family/:id", checkToken, removeFamily);
 
 export default route;

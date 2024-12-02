@@ -58,7 +58,7 @@ const EventPage = () => {
               <div className="flex justify-between">
                 <p>{item.title}</p>
                 <p className="text-sm bg-gray-100 px-2 py-1 rounded-full text-gray-600">
-                  {/* {new Date(item.date).toISOString().slice(0, 10)} */}
+                  {/* {new Date(item.date)?.toISOString()?.slice(0, 10)} */}
                   {item.date}
                 </p>
               </div>
@@ -87,7 +87,7 @@ const EventPage = () => {
                     }
                   />
                   <p className="text-gray-500 text-sm">
-                    {item.participants.length} participants
+                    {item.participants?.length} participants
                   </p>
                 </div>
                 <MessageCircle className="h-5" />

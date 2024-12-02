@@ -2,6 +2,7 @@ import userModel from "../model/user.model.js";
 import bcrypt from "bcryptjs";
 import config from "../config/config.js";
 import jwt from "jsonwebtoken";
+import eventModel from "../model/event.model.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -124,6 +125,41 @@ export const familyMembers = async (req, res) => {
       _id: { $in: user.familyMembers },
     });
     res.json(familyMembers);
+  } catch (err) {
+    res
+      .status(err?.statusCode || 500)
+      .json({ success: false, msg: err?.message });
+  }
+};
+
+export const removeFamily = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const familyId = req.params.id;
+    console.log("userid", userId, "familyId", familyId);
+    const user = await userModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        $pull: {
+          familyMembers: familyId,
+        },
+      }
+    );
+
+    await userModel.findOneAndUpdate(
+      { _id: familyId },
+      { $pull: { familyMembers: userId } }
+    );
+
+    await eventModel.findOneAndUpdate(
+      { userId: userId },
+      { $pull: { participants: familyId } }
+    );
+
+    await eventModel.findOneAndUpdate(
+      { userId: familyId },
+      { $pull: { participants: userId } }
+    );
   } catch (err) {
     res
       .status(err?.statusCode || 500)

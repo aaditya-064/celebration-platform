@@ -26,6 +26,7 @@ export const StateParam = createContext({
   handleGetPhotos: () => {},
   searchUser: () => {},
   getUserCon: () => {},
+  handleRemoveCon: () => {},
 });
 
 export const StateProvider = ({ children }) => {
@@ -43,10 +44,11 @@ export const StateProvider = ({ children }) => {
       await axios({
         url: "http://localhost:8080/api/v1/event/upload",
         method: "post",
-        data: info,
+        data: info2,
         headers: { Authorization: `Bearer ${token}` },
       });
-      setInfo({ ...info, title: "", date: "", description: "" });
+      setInfo2({ ...info2, title: "", date: "", description: "" });
+      window.location.reload();
     } catch (err) {
       toast.error(err.response.data.msg);
     }
@@ -55,9 +57,9 @@ export const StateProvider = ({ children }) => {
   const handleFormUpload = async () => {
     try {
       const formData = new FormData();
-      formData.append("image", info.image);
+      formData.append("image", info2.image);
       formData.append("description", info2.description);
-      console.log(formData);
+      // console.log(formData);
       const uploadPhoto = await axios({
         url: "http://localhost:8080/api/v1/photo/upload/photo",
         method: "post",
@@ -67,17 +69,17 @@ export const StateProvider = ({ children }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      setInfo({ ...info, image: "", description: "" });
-      setInfo2({ ...info2, description: "" });
-      console.log(uploadPhoto);
+      setInfo2({ ...info2, image: "", description: "" });
+      window.location.href = "/photos";
     } catch (err) {
+      console.log(err);
       toast.error(err?.response?.data?.msg);
     }
   };
 
   const handleFileCon = (e) => {
     const { name, files } = e.target;
-    setInfo({ ...info, [name]: files[0] });
+    setInfo2({ ...info, [name]: files[0] });
   };
 
   const getUserCon = async () => {
@@ -117,7 +119,7 @@ export const StateProvider = ({ children }) => {
 
   const handleRegister = async () => {
     try {
-      console.log(info2);
+      // console.log(info2);
       await axios({
         url: "http://localhost:8080/api/v1/user/register",
         method: "post",
@@ -150,7 +152,7 @@ export const StateProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setInfo2(data.data);
-      console.log(data.data);
+      // console.log(data.data);
     } catch (err) {
       toast.error(err?.response?.data?.msg);
     }
@@ -164,6 +166,7 @@ export const StateProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setInfo2(data.data);
+      window.location.reload();
     } catch (err) {
       toast.error(err.response.data.msg);
     }
@@ -198,34 +201,37 @@ export const StateProvider = ({ children }) => {
     }
   };
 
-  const searchUser = async () => {
+  const searchUser = async (email) => {
     try {
       const data = await axios({
-        url: `http://localhost:8080/api/v1/user/search-user/${info2.email}`,
+        url: `http://localhost:8080/api/v1/user/search-user/${email}`,
         method: "get",
         headers: { Authorization: `Bearer ${token}` },
       });
       setFilteredData(data.data);
-      console.log(data.data);
-      // console.log(data);
     } catch (err) {
       toast.error(err?.response?.data?.msg);
     }
   };
 
   const handleAddCon = async (id) => {
-    await axios({
-      url: `http://localhost:8080/api/v1/user/add/family/${id}`,
-      method: "post",
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      await axios({
+        url: `http://localhost:8080/api/v1/user/add/family/${id}`,
+        method: "post",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      window.location.reload();
+    } catch (err) {
+      toast.error(err?.response?.data?.msg);
+    }
   };
 
-  // const handleFilteredData = (value) => {
-  //   // const all_user = users.filter((item) => item.email != loggedUser.email);
-  //   const filteredData = users.filter((item) => item.email == value);
-  //   setFilteredData(filteredData);
-  // };
+  const handleFilteredData = (value) => {
+    // const all_user = users.filter((item) => item.email != loggedUser.email);
+    const filteredData = users.filter((item) => item.email == value);
+    // setFilteredData(filteredData);
+  };
 
   const handleGetPhotos = async () => {
     try {
@@ -237,6 +243,20 @@ export const StateProvider = ({ children }) => {
       setInfo(photos.data);
     } catch (err) {
       toast.error(err?.response?.data?.msg);
+    }
+  };
+
+  const handleRemoveCon = async (id) => {
+    try {
+      await axios({
+        url: `http://localhost:8080/api/v1/user/remove-family/${id}`,
+        method: "delete",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      window.location.reload();
+    } catch (err) {
+      toast.error(err?.response?.data?.msg);
+      console.log(err);
     }
   };
 
@@ -265,6 +285,7 @@ export const StateProvider = ({ children }) => {
         handleGetPhotos,
         getUserCon,
         searchUser,
+        handleRemoveCon,
       }}
     >
       {children}

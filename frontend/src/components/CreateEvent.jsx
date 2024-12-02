@@ -3,7 +3,7 @@ import { StateParam } from "../../context/context";
 import { useParams } from "react-router-dom";
 
 const CreateEvent = ({ onToggle }) => {
-  const { info, handleSubmitCon, handleChangeCon } = useContext(StateParam);
+  const { info2, handleSubmitCon, handleChangeCon } = useContext(StateParam);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ const CreateEvent = ({ onToggle }) => {
                 onChange={(e) => {
                   handleChange(e);
                 }}
-                value={info.title}
+                value={info2.title}
                 type="text"
                 className="border mt-[-9px] p-2 px-3 rounded placeholder:text-gray-600 outline-none"
               />
@@ -45,7 +45,7 @@ const CreateEvent = ({ onToggle }) => {
                   handleChange(e);
                 }}
                 id="date"
-                value={info.date}
+                value={info2.date}
                 name="date"
                 type="date"
                 className="block mt-[-9px] w-full border p-2 px-3 rounded placeholder:text-gray-600 outline-none"
@@ -60,7 +60,7 @@ const CreateEvent = ({ onToggle }) => {
                 }}
                 id="description"
                 className="block mt-[-9px] w-full border p-1 px-3 rounded placeholder:text-gray-600 outline-none"
-                value={info.description}
+                value={info2.description}
                 name="description"
               ></textarea>
               <div className="flex gap-2 text-center">
