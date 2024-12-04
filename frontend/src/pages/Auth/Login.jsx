@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { StateParam } from "../../../context/context";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const { info2, handleChangeCon, handleLogin } = useContext(StateParam);
@@ -47,6 +48,12 @@ const Login = () => {
               Login
             </button>
           </div>
+          <Link
+            to={"/register"}
+            className="text-blue-500 text-sm mt-[-10px] ml-2"
+          >
+            Don't have an account? Register
+          </Link>
         </form>
       </div>
     </div>

@@ -89,6 +89,12 @@ const EventPage = () => {
                   <p className="text-gray-500 text-sm">
                     {item.participants?.length} participants
                   </p>
+                  <Link
+                    to={`/event/${item._id}`}
+                    className="text-blue-500 underline"
+                  >
+                    More
+                  </Link>
                 </div>
                 <MessageCircle className="h-5" />
               </div>

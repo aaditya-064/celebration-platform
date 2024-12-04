@@ -40,7 +40,9 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, config.JWT_SECRET, {
       expiresIn: config.JWT_EXPIRTY_DATE || "1d",
     });
-    res.status(201).json({ msg: "LOGGED IN SUCCESSFULLY", token: token });
+    res
+      .status(201)
+      .json({ msg: "LOGGED IN SUCCESSFULLY", token: token, user: user });
   } catch (err) {
     res
       .status(err?.statusCode || 500)

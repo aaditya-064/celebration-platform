@@ -110,6 +110,7 @@ export const StateProvider = ({ children }) => {
       const payload = JSON.parse(data.request.response);
       const token = payload.token;
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(payload.user));
       toast.success(data.data.msg);
       window.location.href = "/";
     } catch (err) {

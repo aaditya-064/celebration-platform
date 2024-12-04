@@ -5,6 +5,7 @@ import {
   joinEvent,
   unjoinedFamilyEvents,
 } from "../controller/event.controller.js";
+import { getEventMessages } from "../controller/message.controller.js";
 
 import { checkToken } from "../middleware/auth.middleware.js";
 
@@ -14,5 +15,7 @@ route.post("/upload", checkToken, eventUpload);
 route.get("/get", checkToken, allEventFromUser);
 route.post("/:eventId/join", checkToken, joinEvent);
 route.get("/unjoined-events", checkToken, unjoinedFamilyEvents);
+
+route.get("/:eventId/messages", checkToken, getEventMessages);
 
 export default route;
