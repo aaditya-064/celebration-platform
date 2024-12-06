@@ -5,16 +5,22 @@ import UploadPhoto from "../components/UploadPhoto";
 import { StateParam } from "../../context/context";
 
 const PhotosPage = () => {
-  const { open, info, handleGetPhotos, handleModelCon } =
-    useContext(StateParam);
+  const {
+    open,
+    info,
+    familyPhoto,
+    handleGetMyPhotos,
+    handleFamilyPhotos,
+    handleModelCon,
+  } = useContext(StateParam);
   const [active, setActive] = useState(false);
 
   const getPhotos = async () => {
-    handleGetPhotos();
+    handleGetMyPhotos();
+    handleFamilyPhotos();
   };
   useEffect(() => {
     getPhotos();
-    // console.log(info);
   }, []);
 
   const handleToggle = () => {
@@ -66,16 +72,33 @@ const PhotosPage = () => {
           </button>
         </div>
         <div className="mt-10 grid grid-cols-3 gap-10">
-          {info.map((item) => (
-            <div key={item._id} className="shadow-xl p-4">
-              <p className="text-lg font-bold ml-2">{item.name}</p>
-              <p className="text-md ml-2 mt-2">{item.description}</p>
-              <img
-                src={`http://localhost:8080${item.imageUrl}`}
-                className="h-96 object-contain rounded-lg mt-3"
-              />
-            </div>
-          ))}
+          {!active ? (
+            <>
+              {info.map((item) => (
+                <div key={item._id} className="shadow-xl p-4">
+                  <p className="text-lg font-bold ml-2">{item.name}</p>
+                  <p className="text-md ml-2 mt-2">{item.description}</p>
+                  <img
+                    src={`http://localhost:8080${item.imageUrl}`}
+                    className="h-96 object-contain rounded-lg mt-3"
+                  />
+                </div>
+              ))}{" "}
+            </>
+          ) : (
+            <>
+              {familyPhoto.map((item) => (
+                <div key={item._id} className="shadow-xl p-4">
+                  <p className="text-lg font-bold ml-2">{item.name}</p>
+                  <p className="text-md ml-2 mt-2">{item.description}</p>
+                  <img
+                    src={`http://localhost:8080${item.imageUrl}`}
+                    className="h-96 object-contain rounded-lg mt-3"
+                  />
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
       {open ? <UploadPhoto onToggle={handleToggle} /> : null}

@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import {
   loginUser,
   registerUser,
@@ -8,6 +8,7 @@ import {
   individualUser,
   searchUser,
   removeFamily,
+  editUser,
 } from "../controller/auth.controller.js";
 import {
   loginMiddleware,
@@ -29,15 +30,15 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-route.post(
-  "/register",
-  upload.single("profilePicture"),
-  registerMiddleware,
-  registerUser
-);
-
+route.post("/register", registerMiddleware, registerUser);
 route.post("/login", loginMiddleware, loginUser);
 route.get("/all-user", allUser);
+route.patch(
+  "/edit-user",
+  upload.single("profilePicture"),
+  checkToken,
+  editUser
+);
 route.post("/add/family/:familyId", checkToken, addFamily);
 route.get("/get/family", checkToken, familyMembers);
 route.get("/get-user", checkToken, individualUser);

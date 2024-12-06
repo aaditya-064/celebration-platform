@@ -3,7 +3,8 @@ import multer from "multer";
 import { checkToken } from "../middleware/auth.middleware.js";
 import {
   uploadPhoto,
-  allPhotos,
+  myPhotos,
+  familyMembersPhotos,
 } from "../controller/photoUpload.controller.js";
 
 const route = express.Router();
@@ -20,6 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 route.post("/upload/photo", upload.single("image"), checkToken, uploadPhoto);
-route.get("/get/photos", checkToken, allPhotos);
+route.get("/get/photos", checkToken, myPhotos);
+route.get("/get/family-photos", checkToken, familyMembersPhotos);
 
 export default route;

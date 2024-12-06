@@ -13,9 +13,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Header = () => {
-  const [user, setUser] = useState();
   const [isOpen, setIsOpen] = useState(false);
-  const token = localStorage.getItem("token");
+  const [user, setUser] = useState([]);
+  const user_data = JSON.parse(localStorage.getItem("user"));
   const handleClick = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
@@ -26,8 +26,9 @@ const Header = () => {
       const data = await axios({
         url: "http://localhost:8080/api/v1/user/get-user",
         method: "get",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+      console.log(data);
       setUser(data.data);
     } catch (err) {
       console.log(err);

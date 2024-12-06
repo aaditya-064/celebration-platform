@@ -8,6 +8,7 @@ export const StateParam = createContext({
   info2: [],
   users: [],
   filteredData: [],
+  familyPhoto: [],
   open,
   handleSubmitCon: () => {},
   handleChangeCon: () => {},
@@ -23,10 +24,12 @@ export const StateParam = createContext({
   allUserCon: () => {},
   handleAddCon: () => {},
   handleFilteredData: () => {},
-  handleGetPhotos: () => {},
+  handleGetMyPhotos: () => {},
   searchUser: () => {},
   getUserCon: () => {},
   handleRemoveCon: () => {},
+  handleFamilyPhotos: () => {},
+  handleProfile: () => {},
 });
 
 export const StateProvider = ({ children }) => {
@@ -36,13 +39,16 @@ export const StateProvider = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [familyPhoto, setFamilyPhoto] = useState([]);
   const token = localStorage.getItem("token");
+
+  const url = "http://localhost:8080";
 
   const handleSubmitCon = async () => {
     const token = localStorage.getItem("token");
     try {
       await axios({
-        url: "http://localhost:8080/api/v1/event/upload",
+        url: `${url}/api/v1/event/upload`,
         method: "post",
         data: info2,
         headers: { Authorization: `Bearer ${token}` },
@@ -61,7 +67,7 @@ export const StateProvider = ({ children }) => {
       formData.append("description", info2.description);
       // console.log(formData);
       const uploadPhoto = await axios({
-        url: "http://localhost:8080/api/v1/photo/upload/photo",
+        url: `${url}/api/v1/photo/upload/photo`,
         method: "post",
         data: formData,
         headers: {
@@ -79,13 +85,13 @@ export const StateProvider = ({ children }) => {
 
   const handleFileCon = (e) => {
     const { name, files } = e.target;
-    setInfo2({ ...info, [name]: files[0] });
+    setInfo2({ ...info2, [name]: files[0] });
   };
 
   const getUserCon = async () => {
     try {
       const data = await axios({
-        url: "http://localhost:8080/api/v1/user/get-user",
+        url: `${url}/api/v1/user/get-user`,
         method: "get",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -98,12 +104,13 @@ export const StateProvider = ({ children }) => {
   const handleChangeCon = (e) => {
     const { name, value } = e.target;
     setInfo2({ ...info2, [name]: value });
+    console.log(info2);
   };
 
   const handleLogin = async () => {
     try {
       const data = await axios({
-        url: "http://localhost:8080/api/v1/user/login",
+        url: `${url}/api/v1/user/login`,
         method: "post",
         data: info2,
       });
@@ -122,7 +129,7 @@ export const StateProvider = ({ children }) => {
     try {
       // console.log(info2);
       await axios({
-        url: "http://localhost:8080/api/v1/user/register",
+        url: `${url}/api/v1/user/register`,
         method: "post",
         data: info2,
       });
@@ -135,7 +142,7 @@ export const StateProvider = ({ children }) => {
   const handleGetEvents = async () => {
     try {
       const data = await axios({
-        url: "http://localhost:8080/api/v1/event/get",
+        url: `${url}/api/v1/event/get`,
         method: "get",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -148,7 +155,7 @@ export const StateProvider = ({ children }) => {
   const handleUnjoinedEvents = async () => {
     try {
       const data = await axios({
-        url: "http://localhost:8080/api/v1/event/unjoined-events",
+        url: `${url}/api/v1/event/unjoined-events`,
         method: "get",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -162,7 +169,7 @@ export const StateProvider = ({ children }) => {
   const handleJoinEvent = async (id) => {
     try {
       const data = await axios({
-        url: `http://localhost:8080/api/v1/event/${id}/join`,
+        url: `${url}/api/v1/event/${id}/join`,
         method: "post",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -179,7 +186,7 @@ export const StateProvider = ({ children }) => {
 
   const getFamilyCon = async () => {
     const data = await axios({
-      url: "http://localhost:8080/api/v1/user/get/family",
+      url: `${url}/api/v1/user/get/family`,
       method: "get",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -192,7 +199,7 @@ export const StateProvider = ({ children }) => {
 
   const allUserCon = async () => {
     const data = await axios({
-      url: "http://localhost:8080/api/v1/user/all-user",
+      url: `${url}/api/v1/user/all-user`,
       method: "get",
     });
     setUsers(data.data);
@@ -205,7 +212,7 @@ export const StateProvider = ({ children }) => {
   const searchUser = async (email) => {
     try {
       const data = await axios({
-        url: `http://localhost:8080/api/v1/user/search-user/${email}`,
+        url: `${url}/api/v1/user/search-user/${email}`,
         method: "get",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -218,7 +225,7 @@ export const StateProvider = ({ children }) => {
   const handleAddCon = async (id) => {
     try {
       await axios({
-        url: `http://localhost:8080/api/v1/user/add/family/${id}`,
+        url: `${url}/api/v1/user/add/family/${id}`,
         method: "post",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -234,10 +241,10 @@ export const StateProvider = ({ children }) => {
     // setFilteredData(filteredData);
   };
 
-  const handleGetPhotos = async () => {
+  const handleGetMyPhotos = async () => {
     try {
       const photos = await axios({
-        url: "http://localhost:8080/api/v1/photo/get/photos",
+        url: `${url}/api/v1/photo/get/photos`,
         method: "get",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -247,10 +254,23 @@ export const StateProvider = ({ children }) => {
     }
   };
 
+  const handleFamilyPhotos = async () => {
+    try {
+      const data = await axios({
+        url: `${url}/api/v1/photo/get/family-photos`,
+        method: "get",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setFamilyPhoto(data.data);
+    } catch (err) {
+      toast.error(err?.reponse?.data?.msg);
+    }
+  };
+
   const handleRemoveCon = async (id) => {
     try {
       await axios({
-        url: `http://localhost:8080/api/v1/user/remove-family/${id}`,
+        url: `${url}/api/v1/user/remove-family/${id}`,
         method: "delete",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -258,6 +278,41 @@ export const StateProvider = ({ children }) => {
     } catch (err) {
       toast.error(err?.response?.data?.msg);
       console.log(err);
+    }
+  };
+
+  const handleProfile = async () => {
+    try {
+      console.log("submitted");
+      const formData = new FormData();
+      formData.append("profilePicture", info2.profilePicture);
+      formData.append("name", info2.name);
+      formData.append("email", info2.email);
+      formData.append("password", info2.password);
+
+      console.log(info2);
+      const data = await axios({
+        url: `${url}/api/v1/user/edit-user`,
+        method: "patch",
+        data: formData,
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        "Content-Type": "multipart/form-data",
+      });
+      localStorage.setItem("user", JSON.stringify(data.data));
+      console.log(data);
+
+      setInfo2({
+        ...info,
+        name: "",
+        email: "",
+        password: "",
+        profilePicture: "",
+      });
+
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.response?.data?.msg);
     }
   };
 
@@ -269,6 +324,7 @@ export const StateProvider = ({ children }) => {
         users,
         open,
         filteredData,
+        familyPhoto,
         handleSubmitCon,
         handleChangeCon,
         handleFormUpload,
@@ -283,10 +339,12 @@ export const StateProvider = ({ children }) => {
         allUserCon,
         handleAddCon,
         handleFilteredData,
-        handleGetPhotos,
+        handleGetMyPhotos,
         getUserCon,
         searchUser,
         handleRemoveCon,
+        handleFamilyPhotos,
+        handleProfile,
       }}
     >
       {children}

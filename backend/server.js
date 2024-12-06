@@ -26,6 +26,7 @@ const server = http.createServer(app);
 const io = socketConnect(server);
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use("/api/v1/user/", userRouter);

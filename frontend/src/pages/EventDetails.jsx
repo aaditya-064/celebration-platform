@@ -12,12 +12,15 @@ const EventDetails = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [socket, setSocket] = useState(null);
+  const [hovered, setHovered] = useState(false);
+  const [eventParticipants, setEventParticipants] = useState([]);
+  const url = "http://localhost:8080";
 
   const userData = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     fetchEventDetails();
     fetchMessages();
-    const newSocket = io("http://localhost:8080", {
+    const newSocket = io(url, {
       auth: { token: localStorage.getItem("token") },
     });
 
@@ -31,7 +34,8 @@ const EventDetails = () => {
     });
 
     newSocket.on("new-message", (message) => {
-      console.log("message", message);
+      // console.log("message", message);
+
       setMessages((prev) => [
         ...prev,
         {
@@ -54,7 +58,7 @@ const EventDetails = () => {
   const fetchEventDetails = async () => {
     try {
       const response = await axios({
-        url: "http://localhost:8080/api/v1/event/get",
+        url: `${url}/api/v1/event/get`,
         method: "get",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -68,7 +72,7 @@ const EventDetails = () => {
   const fetchMessages = async () => {
     try {
       const response = await axios({
-        url: `http://localhost:8080/api/v1/event/${id}/messages`,
+        url: `${url}/api/v1/event/${id}/messages`,
         method: "get",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -76,6 +80,20 @@ const EventDetails = () => {
     } catch (err) {
       console.log(err);
       toast.error("Failed to fetch messages");
+    }
+  };
+
+  const participants = async () => {
+    try {
+      const data = await axios({
+        url: `${url}/api/v1/event/participants/${event._id}`,
+        method: "get",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setEventParticipants(data.data);
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to fetch this");
     }
   };
 
@@ -88,7 +106,7 @@ const EventDetails = () => {
     setNewMessage("");
   };
 
-  console.log(messages);
+  // console.log(messages);
 
   return (
     <Layout>
@@ -100,11 +118,43 @@ const EventDetails = () => {
           </p>
           <p className="text-gray-700 mb-4">{event.description}</p>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 relative">
             <Users className="w-5 h-5 text-gray-500" />
-            <span className="text-gray-600">
+            <button
+              onMouseOver={() => {
+                setHovered(true);
+                participants();
+              }}
+              onMouseOut={() => {
+                setHovered(false);
+              }}
+              className="text-gray-600"
+            >
               {event.participants?.length} Participants
-            </span>
+            </button>
+            {hovered ? (
+              <div className="absolute left-[15%] shadow-xl py-4 px-4 rounded border">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Omnis
+                odio placeat blanditiis repellendus accusantium fugiat, est
+                dolorum ipsum beatae quia, numquam commodi error impedit?
+                Asperiores aliquam nostrum itaque dolores praesentium sunt
+                soluta, ab, minus, repudiandae libero quo nihil temporibus enim!
+                Ut, maxime illum. In nihil magni, ullam pariatur similique sint
+                libero natus blanditiis laborum animi totam minima praesentium,
+                fuga voluptatem?
+                <div className="flex flex-col">
+                  {eventParticipants.map((item, index) => (
+                    <div key={item._id} className="">
+                      <p className="text-sm text-black">
+                        {index + 1}. {item.name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
 
@@ -120,9 +170,9 @@ const EventDetails = () => {
                 <div className="flex-shrink-0">
                   {message?.senderId?.profilePicture ? (
                     <img
-                      src={`http://localhost:3001${message.senderId.profilePicture}`}
+                      src={`http://localhost:8080${message.senderId.profilePicture}`}
                       alt=""
-                      className="w-8 h-8 rounded-full"
+                      className="w-8 h-8 rounded-full object-cover"
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gray-200" />

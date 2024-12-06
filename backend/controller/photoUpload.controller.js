@@ -1,4 +1,5 @@
 import photoModel from "../model/photo.model.js";
+import userModel from "../model/user.model.js";
 
 export const uploadPhoto = async (req, res) => {
   try {
@@ -20,7 +21,7 @@ export const uploadPhoto = async (req, res) => {
   }
 };
 
-export const allPhotos = async (req, res) => {
+export const myPhotos = async (req, res) => {
   try {
     const user = req.user;
     const photos = await photoModel.find({ userId: user._id });
@@ -33,7 +34,16 @@ export const allPhotos = async (req, res) => {
 export const familyMembersPhotos = async (req, res) => {
   try {
     const user = req.user;
-    const photos = photoModel.find({});
+    const family_members = await userModel.find({
+      _id: { $in: user.familyMembers },
+    });
+
+    const membersId = family_members.map((item) => item._id);
+
+    const family_members_photos = await photoModel.find({
+      userId: { $in: membersId },
+    });
+    res.json(family_members_photos);
   } catch (err) {
     res.status(err?.statusCode || 500).json({ msg: err?.message });
   }

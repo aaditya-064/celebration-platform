@@ -12,7 +12,7 @@ export const registerUser = async (req, res) => {
     const user = await userModel.create({
       ...req.body,
       password: hashedPassword,
-      profilePicture: req.file ? `/uploads/${req.file.filename}` : "",
+      // profilePicture: req.file ? `/uploads/${req.file.filename}` : "",
     });
     res
       .status(201)
@@ -162,6 +162,33 @@ export const removeFamily = async (req, res) => {
       { userId: familyId },
       { $pull: { participants: userId } }
     );
+  } catch (err) {
+    res
+      .status(err?.statusCode || 500)
+      .json({ success: false, msg: err?.message });
+  }
+};
+
+export const editUser = async (req, res) => {
+  try {
+    const user = req.user;
+    console.log(req.body);
+    const password = req.body.password;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const edited_user = await userModel.findOneAndUpdate(
+      { _id: user._id },
+      {
+        $set: {
+          name: req.body.name,
+          email: req.body.email,
+          password: hashedPassword,
+          profilePicture: req.file ? `/uploads/${req.file.filename}` : "",
+        },
+      },
+      { new: true }
+    );
+    res.json(edited_user);
+    console.log(edited_user);
   } catch (err) {
     res
       .status(err?.statusCode || 500)

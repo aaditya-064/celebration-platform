@@ -10,6 +10,7 @@ import EventPage from "./pages/EventPage";
 import FamilyPage from "./pages/FamilyPage";
 import PhotosPage from "./pages/PhotosPage";
 import EventDetails from "./pages/EventDetails";
+import Profile from "./pages/Profile";
 
 // const socket = io.connect("http://localhost:8080");
 
@@ -58,6 +59,7 @@ function App() {
             <Route path={"/family"} Component={FamilyPage} />
             <Route path={"/photos"} Component={PhotosPage} />
             <Route path={"/event/:id"} Component={EventDetails} />
+            <Route path={"/profile"} Component={Profile} />
           </Route>
         </Routes>
       </BrowserRouter>

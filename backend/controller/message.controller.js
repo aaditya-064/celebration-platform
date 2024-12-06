@@ -16,9 +16,8 @@ export const getEventMessages = async (req, res) => {
     const messages = await messageModel
       .find({ eventId })
       .populate("senderId")
-      //   .select("name email profilePicture")
       .sort("createdAt");
-    console.log(messages);
+    // console.log(messages);
     res.json(messages);
   } catch (err) {
     res.status(err?.statusCode || 500).json({ msg: err?.message });

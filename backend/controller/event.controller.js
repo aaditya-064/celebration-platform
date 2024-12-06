@@ -21,6 +21,20 @@ export const eventUpload = async (req, res) => {
   }
 };
 
+export const eventParticipants = async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const event = await eventModel.find({ _id: eventId });
+    const participants = event[0].participants;
+    const users = await userModel.find({ _id: { $in: participants } });
+    res.json(users);
+  } catch (err) {
+    res
+      .status(err?.statusCode || 500)
+      .json({ success: false, msg: err?.message });
+  }
+};
+
 export const joinEvent = async (req, res) => {
   try {
     const user = req.user;
@@ -47,9 +61,11 @@ export const joinEvent = async (req, res) => {
 export const allEventFromUser = async (req, res) => {
   try {
     const user = req.user;
-    const findEvent = await eventModel.find({
-      participants: { $in: user._id },
-    });
+    const findEvent = await eventModel
+      .find({
+        participants: { $in: user._id },
+      })
+      .populate("userId");
     res.json(findEvent);
   } catch (err) {
     res.status(err?.statusCode || 500).json({ msg: err?.message });
