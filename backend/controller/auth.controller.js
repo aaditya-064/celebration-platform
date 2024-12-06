@@ -44,6 +44,7 @@ export const loginUser = async (req, res) => {
       .status(201)
       .json({ msg: "LOGGED IN SUCCESSFULLY", token: token, user: user });
   } catch (err) {
+    console.log(err);
     res
       .status(err?.statusCode || 500)
       .json({ success: false, msg: err?.message });
