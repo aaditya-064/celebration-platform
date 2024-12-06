@@ -171,7 +171,7 @@ export const StateProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setInfo2(data.data);
-      window.location.reload();
+      // window.location.reload();
     } catch (err) {
       toast.error(err.response.data.msg);
     }

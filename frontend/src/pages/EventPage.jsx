@@ -15,17 +15,14 @@ const EventPage = () => {
     handleJoinEvent,
     handleModelCon,
   } = useContext(StateParam);
-  useEffect(() => {
-    const getEvents = async () => {
-      handleGetEvents();
-    };
 
-    const unjoinedEvents = async () => {
-      handleUnjoinedEvents();
-    };
-    getEvents();
-    unjoinedEvents();
-  }, []);
+  const getEvents = async () => {
+    handleGetEvents();
+  };
+
+  const unjoinedEvents = async () => {
+    handleUnjoinedEvents();
+  };
 
   const handleJoin = async (id) => {
     handleJoinEvent(id);
@@ -34,6 +31,12 @@ const EventPage = () => {
   const handleModel = () => {
     handleModelCon();
   };
+
+  useEffect(() => {
+    unjoinedEvents();
+    getEvents();
+  }, []);
+  console.log(info);
 
   return (
     <Layout>
@@ -69,7 +72,7 @@ const EventPage = () => {
                 <img
                   className="h-7 w-7 object-cover rounded-[50%]"
                   src={
-                    item.userId.profilePicture
+                    item?.userId?.profilePicture
                       ? `http://localhost:8080${item.userId.profilePicture}`
                       : "https://imgs.search.brave.com/MfCMRjbwpgFuoONjuznH5NyMPYgEXwI4nagKtkUzPOA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc3RpY2twbmcu/Y29tL2ltYWdlcy81/ODVlNGJmM2NiMTFi/MjI3NDkxYzMzOWEu/cG5n"
                   }
@@ -81,15 +84,17 @@ const EventPage = () => {
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2 mt-5 ml-2">
                   <div className="relative flex">
-                    {item.participants.map((item) => (
-                      <img
-                        className="h-6 w-6 ml-[-12px] object-cover rounded-[50%]"
-                        src={
-                          item.profilePicture
-                            ? `http://localhost:8080${item.profilePicture}`
-                            : "https://imgs.search.brave.com/MfCMRjbwpgFuoONjuznH5NyMPYgEXwI4nagKtkUzPOA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc3RpY2twbmcu/Y29tL2ltYWdlcy81/ODVlNGJmM2NiMTFi/MjI3NDkxYzMzOWEu/cG5n"
-                        }
-                      />
+                    {item?.participants?.map((item, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          className={`h-6 w-6 ml-[-12px] object-cover rounded-[50%]`}
+                          src={
+                            item.profilePicture
+                              ? `http://localhost:8080${item.profilePicture}`
+                              : "https://imgs.search.brave.com/MfCMRjbwpgFuoONjuznH5NyMPYgEXwI4nagKtkUzPOA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc3RpY2twbmcu/Y29tL2ltYWdlcy81/ODVlNGJmM2NiMTFi/MjI3NDkxYzMzOWEu/cG5n"
+                          }
+                        />
+                      </div>
                     ))}
                   </div>
                   <p className="text-gray-500 text-sm">
@@ -128,8 +133,8 @@ const EventPage = () => {
                   <img
                     className="h-7 w-7 object-cover rounded-[50%]"
                     src={
-                      item.profilePicture
-                        ? `http://localhost:8080${item.profilePicture}`
+                      item.userId.profilePicture
+                        ? `http://localhost:8080${item.userId.profilePicture}`
                         : "https://imgs.search.brave.com/MfCMRjbwpgFuoONjuznH5NyMPYgEXwI4nagKtkUzPOA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc3RpY2twbmcu/Y29tL2ltYWdlcy81/ODVlNGJmM2NiMTFi/MjI3NDkxYzMzOWEu/cG5n"
                     }
                   />

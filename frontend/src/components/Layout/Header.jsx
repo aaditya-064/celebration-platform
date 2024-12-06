@@ -28,7 +28,7 @@ const Header = () => {
         method: "get",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      console.log(data);
+      // console.log(data);
       setUser(data.data);
     } catch (err) {
       console.log(err);

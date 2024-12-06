@@ -134,14 +134,6 @@ const EventDetails = () => {
             </button>
             {hovered ? (
               <div className="absolute left-[15%] shadow-xl py-4 px-4 rounded border">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Omnis
-                odio placeat blanditiis repellendus accusantium fugiat, est
-                dolorum ipsum beatae quia, numquam commodi error impedit?
-                Asperiores aliquam nostrum itaque dolores praesentium sunt
-                soluta, ab, minus, repudiandae libero quo nihil temporibus enim!
-                Ut, maxime illum. In nihil magni, ullam pariatur similique sint
-                libero natus blanditiis laborum animi totam minima praesentium,
-                fuga voluptatem?
                 <div className="flex flex-col">
                   {eventParticipants.map((item, index) => (
                     <div key={item._id} className="">
