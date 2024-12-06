@@ -104,7 +104,6 @@ export const StateProvider = ({ children }) => {
   const handleChangeCon = (e) => {
     const { name, value } = e.target;
     setInfo2({ ...info2, [name]: value });
-    console.log(info2);
   };
 
   const handleLogin = async () => {
@@ -127,7 +126,6 @@ export const StateProvider = ({ children }) => {
 
   const handleRegister = async () => {
     try {
-      // console.log(info2);
       await axios({
         url: `${url}/api/v1/user/register`,
         method: "post",
@@ -160,7 +158,6 @@ export const StateProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setInfo2(data.data);
-      // console.log(data.data);
     } catch (err) {
       toast.error(err?.response?.data?.msg);
     }
@@ -283,14 +280,12 @@ export const StateProvider = ({ children }) => {
 
   const handleProfile = async () => {
     try {
-      console.log("submitted");
       const formData = new FormData();
       formData.append("profilePicture", info2.profilePicture);
       formData.append("name", info2.name);
       formData.append("email", info2.email);
       formData.append("password", info2.password);
 
-      console.log(info2);
       const data = await axios({
         url: `${url}/api/v1/user/edit-user`,
         method: "patch",
@@ -299,7 +294,6 @@ export const StateProvider = ({ children }) => {
         "Content-Type": "multipart/form-data",
       });
       localStorage.setItem("user", JSON.stringify(data.data));
-      console.log(data);
 
       setInfo2({
         ...info,
