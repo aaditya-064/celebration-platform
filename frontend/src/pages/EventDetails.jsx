@@ -14,6 +14,7 @@ const EventDetails = () => {
   const [socket, setSocket] = useState(null);
   const [hovered, setHovered] = useState(false);
   const [eventParticipants, setEventParticipants] = useState([]);
+  // const url = "https://render.com/docs/web-services#port-binding";
   const url = "http://localhost:8080";
 
   const userData = JSON.parse(localStorage.getItem("user"));

@@ -13,6 +13,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Header = () => {
+  // const url = "https://render.com/docs/web-services#port-binding";
+  const url = "http://localhost:8080";
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState([]);
   const user_data = JSON.parse(localStorage.getItem("user"));
@@ -24,7 +26,7 @@ const Header = () => {
   const func = async () => {
     try {
       const data = await axios({
-        url: "http://localhost:8080/api/v1/user/get-user",
+        url: `${url}/api/v1/user/get-user`,
         method: "get",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
