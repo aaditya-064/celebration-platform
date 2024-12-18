@@ -33,8 +33,11 @@ const Header = () => {
       // console.log(data);
       setUser(data.data);
     } catch (err) {
-      console.log(err);
       toast.error(err?.response?.data?.msg);
+      if (err?.response?.data?.msg == "jwt expired") {
+        window.location.href = "/login";
+        localStorage.clear();
+      }
     }
   };
 

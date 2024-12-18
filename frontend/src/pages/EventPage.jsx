@@ -36,8 +36,7 @@ const EventPage = () => {
     unjoinedEvents();
     getEvents();
   }, []);
-  console.log(info);
-
+  console.log(info2);
   return (
     <Layout>
       <div className="p-4">

@@ -48,3 +48,42 @@ export const familyMembersPhotos = async (req, res) => {
     res.status(err?.statusCode || 500).json({ msg: err?.message });
   }
 };
+
+export const likePhoto = async (req, res) => {
+  try {
+    const user = req.user;
+    const photoId = req.params.id;
+    const photo = await photoModel.findOne({ _id: photoId });
+    if (photo.likes.includes(user._id)) {
+      const updateLike = await photoModel.findOneAndUpdate(
+        { _id: photoId },
+        { $pull: { likes: user._id } }
+      );
+      return res.json(updateLike);
+    }
+    const updateLike = await photoModel.findOneAndUpdate(
+      { _id: photoId },
+      { $set: { likes: user._id } }
+    );
+    res.json(updateLike);
+  } catch (err) {
+    console.log(err);
+    res
+      .status(err?.statusCode || 500)
+      .json({ success: false, msg: err?.message });
+  }
+};
+
+export const selectedPhoto = async (req, res) => {
+  try {
+    // const user = req.user;
+    const data = await photoModel.findOne({ _id: req.params.id });
+    console.log(data);
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+    res
+      .status(err?.statusCode || 500)
+      .json({ success: false, msg: err?.message });
+  }
+};
