@@ -5,6 +5,8 @@ import {
   uploadPhoto,
   myPhotos,
   familyMembersPhotos,
+  likePhoto,
+  selectedPhoto,
 } from "../controller/photoUpload.controller.js";
 
 const route = express.Router();
@@ -23,5 +25,7 @@ const upload = multer({ storage: storage });
 route.post("/upload/photo", upload.single("image"), checkToken, uploadPhoto);
 route.get("/get/photos", checkToken, myPhotos);
 route.get("/get/family-photos", checkToken, familyMembersPhotos);
+route.patch("/like/:id", checkToken, likePhoto);
+route.get("/photo/:id", checkToken, selectedPhoto);
 
 export default route;

@@ -1,19 +1,29 @@
 import React, { useEffect, useContext, useState } from "react";
 import Layout from "../components/Layout/Layout";
-import { Image, Plus, User, Users } from "lucide-react";
+import { Heart, Image, Plus, User, Users } from "lucide-react";
 import UploadPhoto from "../components/UploadPhoto";
 import { StateParam } from "../../context/context";
+import axios from "axios";
+import toast from "react-hot-toast";
+import PhotoSection from "../components/PhotoSection";
 
 const PhotosPage = () => {
   const {
     open,
     info,
+    pop,
+    handlePopPhoto,
     familyPhoto,
     handleGetMyPhotos,
     handleFamilyPhotos,
     handleModelCon,
   } = useContext(StateParam);
+
+  //to handle the family and personal photos only
   const [active, setActive] = useState(false);
+  const [id, setId] = useState(null);
+
+  const url = "http://localhost:8080";
 
   const getPhotos = async () => {
     handleGetMyPhotos();
@@ -22,10 +32,6 @@ const PhotosPage = () => {
   useEffect(() => {
     getPhotos();
   }, []);
-
-  const handleToggle = () => {
-    handleModelCon();
-  };
 
   return (
     <Layout>
@@ -36,7 +42,9 @@ const PhotosPage = () => {
             Photos
           </p>
           <button
-            onClick={handleToggle}
+            onClick={() => {
+              handleModelCon();
+            }}
             className="flex gap-1 text-md bg-[#4f46e5] items-center px-3 py-2 text-white rounded-md hover:bg-white hover:text-[#4f46e5] border border-[#4f46e5] transition-all"
           >
             <Plus />
@@ -87,21 +95,43 @@ const PhotosPage = () => {
             </>
           ) : (
             <>
-              {familyPhoto.map((item) => (
-                <div key={item._id} className="shadow-xl p-4">
-                  <p className="text-lg font-bold ml-2">{item.name}</p>
-                  <p className="text-md ml-2 mt-2">{item.description}</p>
-                  <img
-                    src={`http://localhost:8080${item.imageUrl}`}
-                    className="h-96 object-contain rounded-lg mt-3"
-                  />
-                </div>
-              ))}
+              <div
+                onClick={() => {
+                  handlePopPhoto();
+                }}
+                className=""
+              >
+                {familyPhoto.map((item) => (
+                  <>
+                    <div
+                      key={item._id}
+                      onClick={() => {
+                        setId(item._id);
+                      }}
+                      className="shadow-xl p-4"
+                    >
+                      <p className="text-lg font-bold ml-2">{item.name}</p>
+                      <p className="text-md ml-2 mt-2">{item.description}</p>
+                      <img
+                        src={`http://localhost:8080${item.imageUrl}`}
+                        className="h-96 object-contain rounded-lg mt-3"
+                      />
+                    </div>
+                  </>
+                ))}
+              </div>
             </>
           )}
         </div>
       </div>
-      {open ? <UploadPhoto onToggle={handleToggle} /> : null}
+      {open ? (
+        <UploadPhoto
+          onToggle={() => {
+            handleModelCon();
+          }}
+        />
+      ) : null}
+      {pop ? <PhotoSection id={id} onToggle={pop} /> : null}
     </Layout>
   );
 };
