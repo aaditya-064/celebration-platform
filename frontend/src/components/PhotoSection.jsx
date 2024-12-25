@@ -8,43 +8,50 @@ const PhotoSection = ({ id }) => {
   const { handlePopPhoto } = useContext(StateParam);
   const [info, setInfo] = useState({});
   const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const url = "http://localhost:8080";
-  console.log("first", liked);
 
-  const fetchPhoto = async () => {
-    try {
-      const res = await axios({
-        url: `${url}/api/v1/photo/photo/${id}`,
-        method: "get",
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      setInfo({ ...info, ...res.data });
-      // console.log(res.data);
-      // console.log(res.data);
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.response?.data?.msg);
-    }
-  };
   useEffect(() => {
-    fetchPhoto();
-  }, []);
+    const fetchPhoto = async () => {
+      try {
+        const res = await axios({
+          url: `${url}/api/v1/photo/photo/${id}`,
+          method: "get",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        setInfo(res.data);
+        const user = JSON.parse(localStorage.getItem("user"));
+        setLiked(res.data.likes.includes(user._id));
+        setLikeCount(res.data.likes.length);
+      } catch (err) {
+        console.error(err);
+        toast.error(err?.response?.data?.msg || "Failed to fetch photo.");
+      }
+    };
 
-  const toggleLike = async (id) => {
+    fetchPhoto();
+  }, [id]);
+
+  const toggleLike = async () => {
     try {
       const res = await axios({
         url: `${url}/api/v1/photo/like/${id}`,
         method: "patch",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setLiked(!liked);
       const user = JSON.parse(localStorage.getItem("user"));
-      res.data.likes.includes(user._id) ? setLiked(true) : setLiked(false);
-      // setLiked(!liked);
+      const updatedLiked = res.data.likes.includes(user._id);
+      setLiked(updatedLiked);
+      setLikeCount(res.data.likes.length);
     } catch (err) {
-      console.log(err);
-      toast.error(err?.reponse?.data?.msg);
+      console.error(err);
+      toast.error(err?.response?.data?.msg || "Failed to toggle like.");
     }
+  };
+
+  const handleClose = () => {
+    handlePopPhoto();
+    setLiked(false); // Reset local state if needed
   };
 
   return (
@@ -56,26 +63,16 @@ const PhotoSection = ({ id }) => {
             <p className="ml-2">{info.description}</p>
             <img src={`${url}${info.imageUrl}`} alt="" className="w-96" />
             <div className="flex justify-between mt-2">
-              <button
-                onClick={() => {
-                  toggleLike(info._id);
-                }}
-                className="flex gap-2"
-              >
-                {liked || info?.likes?.length == 0 ? (
-                  <Heart strokeWidth={1} />
-                ) : (
-                  <Heart strokeWidth={1} className="fill-red-800" />
-                )}
-                {info?.likes?.length}
+              <button onClick={toggleLike} className="flex gap-2 items-center">
+                <Heart
+                  strokeWidth={1}
+                  className={liked ? "fill-red-800" : ""}
+                />
+                {likeCount}
               </button>
               <button
                 className="bg-red-600 text-white px-4 py-1 rounded hover:opacity-70 transition-all"
-                onClick={() => {
-                  handlePopPhoto();
-                  setLiked(false);
-                  console.log(liked);
-                }}
+                onClick={handleClose}
               >
                 Close
               </button>
