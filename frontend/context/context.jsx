@@ -294,12 +294,14 @@ export const StateProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(data.data));
 
       setInfo2({
-        ...info,
+        ...info2,
         name: "",
         email: "",
         password: "",
         profilePicture: "",
       });
+
+      // setInfo2((prev) => [...prev]);
 
       window.location.reload();
     } catch (err) {

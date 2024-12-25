@@ -9,9 +9,6 @@ const HomePage = () => {
       <button className="bg-red-500 p-2 text-white rounded mt-2 ml-2 hover:opacity-80 transition-all">
         SUBSCRIBE
       </button>
-      <br />
-      EYES BLUE BROWN, CAN'T REMEMBER A LOT OF TIME HAS PASSED SINCE 3RD OF
-      DECEMBER
     </Layout>
   );
 };
