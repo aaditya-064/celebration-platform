@@ -33,7 +33,7 @@ app.use("/api/v1/user/", userRouter);
 app.use("/api/v1/event/", eventRouter);
 app.use("/api/v1/photo/", photoRouter);
 app.use("/uploads", express.static("uploads"));
-app.set("io", io);
+app.use("io", io);
 
 db.then(() => {
   console.log("DATABASE CONNECTED");

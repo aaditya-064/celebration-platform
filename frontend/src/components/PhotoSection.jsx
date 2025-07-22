@@ -48,6 +48,7 @@ const PhotoSection = ({ id }) => {
         ...prevInfo,
         likes: res.data.likes,
       }));
+      console.log(info);
     } catch (err) {
       console.log(err);
       toast.error(err?.response?.data?.msg);
