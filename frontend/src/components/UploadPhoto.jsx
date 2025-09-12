@@ -4,7 +4,7 @@ import { StateParam } from "../../context/context";
 const UploadPhoto = ({ onToggle }) => {
   const { info2, handleFormUpload, handleChangeCon, handleFileCon } =
     useContext(StateParam);
-
+  console.log(onToggle);
   const handleUpload = async (e) => {
     e.preventDefault();
     handleFormUpload();

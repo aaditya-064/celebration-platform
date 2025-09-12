@@ -9,6 +9,8 @@ export const StateParam = createContext({
   users: [],
   filteredData: [],
   familyPhoto: [],
+  liked: false,
+  pop: false,
   open,
   handleSubmitCon: () => {},
   handleChangeCon: () => {},
@@ -23,23 +25,24 @@ export const StateParam = createContext({
   getFamilyCon: () => {},
   allUserCon: () => {},
   handleAddCon: () => {},
-  handleFilteredData: () => {},
   handleGetMyPhotos: () => {},
   searchUser: () => {},
   getUserCon: () => {},
   handleRemoveCon: () => {},
   handleFamilyPhotos: () => {},
   handleProfile: () => {},
+  handlePopPhoto: () => {},
 });
 
 export const StateProvider = ({ children }) => {
   const [info, setInfo] = useState([]);
   const [info2, setInfo2] = useState([]);
-  const [loggedUser, setLoggedUser] = useState([]);
+  const [loggedUser, setLoggedUser] = useState(null);
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [familyPhoto, setFamilyPhoto] = useState([]);
+  const [pop, setPop] = useState(false);
   const token = localStorage.getItem("token");
 
   const url = "http://localhost:8080";
@@ -233,12 +236,6 @@ export const StateProvider = ({ children }) => {
     }
   };
 
-  const handleFilteredData = (value) => {
-    // const all_user = users.filter((item) => item.email != loggedUser.email);
-    const filteredData = users.filter((item) => item.email == value);
-    // setFilteredData(filteredData);
-  };
-
   const handleGetMyPhotos = async () => {
     try {
       const photos = await axios({
@@ -297,18 +294,24 @@ export const StateProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(data.data));
 
       setInfo2({
-        ...info,
+        ...info2,
         name: "",
         email: "",
         password: "",
         profilePicture: "",
       });
 
+      // setInfo2((prev) => [...prev]);
+
       window.location.reload();
     } catch (err) {
       console.log(err);
       toast.error(err?.response?.data?.msg);
     }
+  };
+
+  const handlePopPhoto = () => {
+    setPop(!pop);
   };
 
   return (
@@ -319,7 +322,9 @@ export const StateProvider = ({ children }) => {
         users,
         open,
         filteredData,
+        pop,
         familyPhoto,
+        handlePopPhoto,
         handleSubmitCon,
         handleChangeCon,
         handleFormUpload,
@@ -333,7 +338,6 @@ export const StateProvider = ({ children }) => {
         getFamilyCon,
         allUserCon,
         handleAddCon,
-        handleFilteredData,
         handleGetMyPhotos,
         getUserCon,
         searchUser,

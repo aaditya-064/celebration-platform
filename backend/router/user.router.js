@@ -32,7 +32,7 @@ const upload = multer({ storage: storage });
 
 route.post("/register", registerMiddleware, registerUser);
 route.post("/login", loginMiddleware, loginUser);
-route.get("/all-user", allUser);
+route.get("/all-user", checkToken, allUser);
 route.patch(
   "/edit-user",
   upload.single("profilePicture"),

@@ -18,6 +18,7 @@ const photoSchema = mongoose.Schema(
     description: {
       type: String,
     },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
   },
   { timestamps: true }
 );

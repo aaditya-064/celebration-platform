@@ -45,6 +45,7 @@ export const checkToken = async (req, res, next) => {
       throw err;
     }
     const user = await userModel.findById(verifyToken.userId);
+    console.log(verifyToken);
     req.user = user;
     next();
   } catch (err) {
